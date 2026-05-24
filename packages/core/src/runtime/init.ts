@@ -1460,9 +1460,7 @@ export function initSandboxRuntimeModular(): void {
       .finally(() => {
         externalCompositionsReady = true;
         bindRootTimelineIfAvailable();
-        if (state.capturedTimeline) {
-          window.__renderReady = true;
-        }
+        window.__renderReady = true;
         runAdapters("discover", state.currentTime);
         bindMediaMetadataListeners();
         installAssetFailureDiagnostics();
@@ -1633,11 +1631,11 @@ export function initSandboxRuntimeModular(): void {
     player._timeline = state.capturedTimeline;
   }
 
-  // __renderReady = timeline is bound, safe for deterministic seeking.
+  // __renderReady = timeline binding attempted, safe for deterministic seeking.
+  // Set unconditionally: renderSeek works with or without a GSAP timeline
+  // (CSS/WAAPI/Lottie compositions use adapter-only seeking).
   // fileServer.ts sets this immediately (no timeline to bind in its runtime).
-  if (state.capturedTimeline) {
-    window.__renderReady = true;
-  }
+  window.__renderReady = true;
 
   // When the bundler inlines compositions, data-composition-src is removed so
   // loadExternalCompositions() is skipped. But inline scripts registering child
@@ -1650,9 +1648,7 @@ export function initSandboxRuntimeModular(): void {
         player._timeline = state.capturedTimeline;
       }
       runAdapters("discover", state.currentTime);
-      if (state.capturedTimeline) {
-        window.__renderReady = true;
-      }
+      window.__renderReady = true;
       postTimeline();
       postState(true);
     }, 0);

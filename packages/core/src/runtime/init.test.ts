@@ -557,7 +557,7 @@ describe("initSandboxRuntimeModular", () => {
     expect(window.__player).toBeDefined();
   });
 
-  it("does not set __renderReady when no timeline is available", () => {
+  it("sets __renderReady even without a GSAP timeline (CSS/WAAPI compositions)", () => {
     const root = document.createElement("div");
     root.setAttribute("data-composition-id", "main");
     root.setAttribute("data-root", "true");
@@ -571,6 +571,6 @@ describe("initSandboxRuntimeModular", () => {
     initSandboxRuntimeModular();
 
     expect(window.__playerReady).toBe(true);
-    expect(window.__renderReady).toBeUndefined();
+    expect(window.__renderReady).toBe(true);
   });
 });
